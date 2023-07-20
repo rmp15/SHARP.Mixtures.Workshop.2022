@@ -12,8 +12,8 @@ library(BART)
 library(randomForest) 
 
 ## ----load bartmix, message=FALSE----------------------------------------------
-# install.packages("devtools")
-# devtools::install_github("AnderWilson/bartmix")
+# install.packages("remotes")
+# remotes::install_github("AnderWilson/bartmix")
 library(bartmix)
 
 ## ----load data----------------------------------------------------------------
@@ -59,8 +59,8 @@ set.seed(1000)
 fit_rf <- randomForest(y=lnLTL_z_residuals,
                        x=mixture,
                        ntree=1000,
-                       mtry=6,
-                       importance = TRUE) 
+                       mtry=6,   # number of variables used in each tree
+                       importance = TRUE)  # assess mixture component importance
 
 ## ----predict with random forests----------------------------------------------
 pred_rf <- predict(fit_rf)
@@ -133,10 +133,10 @@ ggplot(funan1_pd, aes(x=x, y=mean, ymin=lower, ymax=upper)) +
   ylab("Estimate (mean response)") 
 
 ## ----BART partial dependence for all components, echo=FALSE, eval=FALSE-------
-#  # all_pd <- partialdependence1(fit_bart,
-#  #                             data=cbind(mixture,covariates),
-#  #                             exposures = exposure_names,
-#  #                             L=50)
+#  all_pd <- partialdependence1(fit_bart,
+#                              data=cbind(mixture,covariates),
+#                              exposures = exposure_names,
+#                              L=50)
 
 ## ----BART partial dependence for all components visualization-----------------
 plt <- all_pd %>%
@@ -188,10 +188,10 @@ ggplot(pd_2way, aes(x=x, y=mean,
   ylab("Estimate (mean response)") 
 
 ## ----BART total mixture effect, eval=FALSE------------------------------------
-#  # totalmix <- totalmixtureeffect(fit_bart,
-#  #                                data=cbind(mixture,covariates),
-#  #                                exposures = exposure_names,
-#  #                                qtls = seq(0.2,0.8,0.05))
+#  totalmix <- totalmixtureeffect(fit_bart,
+#                                 data=cbind(mixture,covariates),
+#                                 exposures = exposure_names,
+#                                 qtls = seq(0.2,0.8,0.05))
 
 ## ----BART total mixture effect visualization----------------------------------
 ggplot(totalmix, aes(x=quantile, y=mean, ymin=lower, ymax=upper)) + 
